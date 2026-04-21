@@ -129,7 +129,7 @@ export default function AdminPage() {
 
     return (
         <DashboardLayout>
-            <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-900">Admin Dashboard</h1>
 
             {message && (
                 <div className={`p-4 rounded-md mb-6 ${message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
@@ -160,7 +160,7 @@ export default function AdminPage() {
                                             type="time"
                                             value={configForm.market_open_time}
                                             onChange={(e) => setConfigForm({ ...configForm, market_open_time: e.target.value })}
-                                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 placeholder-gray-600"
                                         />
                                     </div>
                                     <div>
@@ -169,7 +169,7 @@ export default function AdminPage() {
                                             type="time"
                                             value={configForm.market_close_time}
                                             onChange={(e) => setConfigForm({ ...configForm, market_close_time: e.target.value })}
-                                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 placeholder-gray-600"
                                         />
                                     </div>
                                 </div>
@@ -191,7 +191,7 @@ export default function AdminPage() {
                                 type="date"
                                 value={newHoliday}
                                 onChange={(e) => setNewHoliday(e.target.value)}
-                                className="flex-1 border border-gray-300 rounded-md shadow-sm p-2"
+                                className="flex-1 border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 placeholder-gray-600"
                                 required
                             />
                             <button
@@ -287,7 +287,7 @@ export default function AdminPage() {
                                     name="company_name"
                                     id="company_name"
                                     required
-                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2"
+                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2 text-gray-900 placeholder-gray-600"
                                     value={formData.company_name}
                                     onChange={handleChange}
                                 />
@@ -304,7 +304,7 @@ export default function AdminPage() {
                                     name="ticker_symbol"
                                     id="ticker_symbol"
                                     required
-                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2 uppercase"
+                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2 uppercase text-gray-900 placeholder-gray-600"
                                     value={formData.ticker_symbol}
                                     onChange={(e) => setFormData({ ...formData, ticker_symbol: e.target.value.toUpperCase() })}
                                 />
@@ -322,7 +322,7 @@ export default function AdminPage() {
                                     id="total_volume"
                                     required
                                     min="1"
-                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2"
+                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2 text-gray-900 placeholder-gray-600"
                                     value={formData.total_volume}
                                     onChange={handleChange}
                                 />
@@ -341,7 +341,7 @@ export default function AdminPage() {
                                     required
                                     min="0.01"
                                     step="0.01"
-                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2"
+                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2 text-gray-900 placeholder-gray-600"
                                     value={formData.initial_price}
                                     onChange={handleChange}
                                 />

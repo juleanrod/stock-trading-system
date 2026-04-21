@@ -16,8 +16,11 @@ export default function CashPage() {
         try {
             const response = await api.get('/cash');
             setBalance(response.data.balance);
-        } catch (error) {
-            console.error('Error fetching balance:', error);
+        } catch (error: any) {
+            if (error.response?.status !== 404) {
+                console.error('Error fetching balance:', error.message || error);
+            }
+            setBalance(0);
         }
     };
 
@@ -25,8 +28,10 @@ export default function CashPage() {
         try {
             const response = await api.get('/cash/transactions');
             setTransactions(response.data);
-        } catch (error) {
-            console.error('Error fetching transactions:', error);
+        } catch (error: any) {
+            if (error.response?.status !== 404) {
+                console.error('Error fetching transactions:', error.message || error);
+            }
         }
     };
 
@@ -55,7 +60,7 @@ export default function CashPage() {
 
     return (
         <DashboardLayout>
-            <h1 className="text-2xl font-bold mb-6">Cash Management</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-900">Cash Management</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Transaction Form */}
@@ -76,7 +81,7 @@ export default function CashPage() {
                                     type="number"
                                     name="amount"
                                     id="amount"
-                                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md py-2 border"
+                                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md py-2 border text-gray-900 placeholder-gray-600"
                                     placeholder="0.00"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}

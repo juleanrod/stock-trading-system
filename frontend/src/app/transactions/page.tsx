@@ -32,7 +32,7 @@ export default function TransactionsPage() {
 
     return (
         <DashboardLayout>
-            <h1 className="text-2xl font-bold mb-6">Transaction History</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-900">Transaction History</h1>
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">

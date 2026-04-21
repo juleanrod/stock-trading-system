@@ -45,8 +45,8 @@ export default function DashboardPage() {
             // 2. Fetch User Data (Cash & Portfolio) - May fail for admins without accounts
             try {
                 const [cashRes, portfolioRes] = await Promise.all([
-                    api.get('/cash'),
-                    api.get('/portfolio')
+                    api.get('/cash').catch(() => ({ data: { balance: null } })),
+                    api.get('/portfolio').catch(() => ({ data: [] }))
                 ]);
 
                 setBalance(cashRes.data.balance);

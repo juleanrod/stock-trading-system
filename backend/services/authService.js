@@ -33,7 +33,7 @@ exports.registerUser = async (userData) => {
 
         // Create user
         const newUserResult = await client.query(
-            'INSERT INTO users (name, username, email, password_hash, role) VALUES ($1, $2, $3, $4, $5) RETURNING user_id, username, role',
+            'INSERT INTO users (name, username, email, password_hash, role) VALUES ($1, $2, $3, $4, $5) RETURNING user_id, username, role, name, email',
             [name, username, email, passwordHash, role]
         );
 

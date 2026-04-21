@@ -40,15 +40,11 @@ export default function MarketPage() {
             setStocks((prevStocks) =>
                 prevStocks.map((stock) => {
                     if (stock.ticker_symbol === data.ticker) {
-                        const previousPrice = stock.current_price || parseFloat(stock.initial_price);
-                        const change = data.price - previousPrice;
-                        const changePercent = (change / previousPrice) * 100;
-
                         return {
                             ...stock,
                             current_price: data.price,
-                            change: change,
-                            change_percent: changePercent
+                            change: data.change,
+                            change_percent: data.change_percent
                         };
                     }
                     return stock;
@@ -73,7 +69,7 @@ export default function MarketPage() {
 
     return (
         <DashboardLayout>
-            <h1 className="text-2xl font-bold mb-6">Market</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-900">Market</h1>
             <div className="bg-white shadow overflow-hidden sm:rounded-md">
                 <ul className="divide-y divide-gray-200">
                     {stocks.map((stock) => (

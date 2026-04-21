@@ -1,7 +1,7 @@
 const { pool } = require('../config/database');
 const marketService = require('./marketService');
 
-const GENERATION_INTERVAL_MS = 30000; // 30 seconds
+const GENERATION_INTERVAL_MS = parseInt(process.env.PRICE_GENERATION_INTERVAL_MS) || 30000; // default 30 seconds
 
 async function generatePrices() {
     console.log('Starting price generation cycle...');

@@ -34,9 +34,9 @@ router.post('/deposit', authenticateToken, async (req, res) => {
     try {
         await client.query('BEGIN');
 
-        // Update balance
+        // Upsert balance to gracefully handle users created without initial cash accounts
         await client.query(
-            'UPDATE cash_accounts SET balance = balance + $1, last_updated = NOW() WHERE user_id = $2',
+            'INSERT INTO cash_accounts (user_id, balance) VALUES ($2, $1) ON CONFLICT (user_id) DO UPDATE SET balance = cash_accounts.balance + EXCLUDED.balance, last_updated = NOW()',
             [amount, req.user.user_id]
         );
 
@@ -74,6 +74,9 @@ router.post('/withdraw', authenticateToken, async (req, res) => {
 
         // Check balance
         const balanceRes = await client.query('SELECT balance FROM cash_accounts WHERE user_id = $1', [req.user.user_id]);
+        if (balanceRes.rows.length === 0) {
+            throw new Error('Insufficient funds (No cash account found)');
+        }
         const currentBalance = parseFloat(balanceRes.rows[0].balance);
 
         if (currentBalance < amount) {

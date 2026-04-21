@@ -1,6 +1,6 @@
 const { pool } = require('../config/database');
 
-const POLL_INTERVAL_MS = 2000; // 2 seconds
+const POLL_INTERVAL_MS = parseInt(process.env.PRICE_POLL_INTERVAL_MS) || 2000; // default 2 seconds
 
 let lastPollTime = new Date();
 
@@ -11,7 +11,6 @@ function start(io) {
         try {
             const client = await pool.connect();
 
-            const today = new Date().toISOString().split('T')[0];
             const query = `
         SELECT 
             s.ticker_symbol, 
@@ -20,14 +19,14 @@ function start(io) {
             p.low, 
             p.market_cap, 
             p.recorded_at,
-            (SELECT open FROM price_history WHERE stock_id = s.stock_id AND DATE(recorded_at) = $2 ORDER BY recorded_at ASC LIMIT 1) as open_price
+            (SELECT open FROM price_history WHERE stock_id = s.stock_id AND DATE(recorded_at) = CURRENT_DATE ORDER BY recorded_at ASC LIMIT 1) as open_price
         FROM price_history p
         JOIN stocks s ON p.stock_id = s.stock_id
         WHERE p.recorded_at > $1
         ORDER BY p.recorded_at ASC
       `;
 
-            const result = await client.query(query, [lastPollTime, today]);
+            const result = await client.query(query, [lastPollTime]);
             client.release();
 
             if (result.rows.length > 0) {

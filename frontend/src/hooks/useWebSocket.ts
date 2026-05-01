@@ -8,7 +8,7 @@ export const useWebSocket = () => {
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        const socketInstance = io('http://localhost:5005');
+        const socketInstance = io({ path: '/socket.io' });
 
         socketInstance.on('connect', () => {
             console.log('Connected to WebSocket');

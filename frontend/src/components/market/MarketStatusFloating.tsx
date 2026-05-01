@@ -96,7 +96,8 @@ export default function MarketStatusFloating() {
             const diff = targetTime.getTime() - now.getTime();
 
             if (diff <= 0) {
-                // Event happened, maybe refresh?
+                // Event happened, instantly force a backend re-sync instead of waiting for 60s fallback!
+                fetchData();
                 return '00:00:00';
             }
 

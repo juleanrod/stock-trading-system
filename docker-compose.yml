@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  db:
+    restart: always
+    build:
+      context: ./backend
+      dockerfile: db.Dockerfile
+    environment:
+      POSTGRES_USER: ${DB_USER:-julian}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-stock_trading}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    restart: always
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      PORT: 5005
+      DB_HOST: db
+      DB_USER: ${DB_USER:-julian}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_NAME: ${DB_NAME:-stock_trading}
+      DB_PORT: 5432
+      JWT_SECRET: ${JWT_SECRET:-dev_secret_key_123}
+      PRICE_GENERATION_INTERVAL_MS: ${PRICE_GENERATION_INTERVAL_MS:-30000}
+      PRICE_POLL_INTERVAL_MS: ${PRICE_POLL_INTERVAL_MS:-2000}
+      TZ: America/Los_Angeles
+    depends_on:
+      - db
+    ports:
+      - "5005:5005"
+
+  frontend:
+    restart: always
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      BACKEND_URL: http://backend:5005
+    ports:
+      - "3000:3000"
+
+  proxy:
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:

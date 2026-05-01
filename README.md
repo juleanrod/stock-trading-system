@@ -58,11 +58,20 @@ This project was intentionally a learning stretch. Every major technology decisi
 
 ## 📸 Application Gallery
 
+![Dashboard](./docs/screenshots/dashboard.png)
+*High-level portfolio overview and market status.*
+
 ![Market Dashboard](./docs/screenshots/market.png)
 *Live ticker prices and real-time market data.*
 
 ![Trade Execution](./docs/screenshots/trade_modal.png)
 *Instant trade execution interface with real-time pricing.*
+
+![Transaction History](./docs/screenshots/transactions.png)
+*Immutable ledger of all buy and sell orders.*
+
+![Cash Management](./docs/screenshots/cash.png)
+*Deposit and withdraw interface for portfolio liquidity.*
 
 ![Admin Panel](./docs/screenshots/admin.png)
 *Admin controls for market hours, IPOs, and system state.*

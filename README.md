@@ -1,59 +1,52 @@
 # TradeSim: Real-Time Stock Trading System 📈
 
-**TradeSim** is a full-stack, real-time stock trading platform engineered to simulate a live market environment. Built with modern web technologies, it features dynamic price generation, bi-directional WebSocket communication for live data feeds, and a fully automated Infrastructure-as-Code (IaC) deployment pipeline for AWS.
+**TradeSim** is a full-stack, client/server web application built as a solo capstone project for IFT 401. It simulates a real brokerage environment designed to train stockbrokers on buying and selling stocks. The system supports two user roles — customers (who trade, manage portfolios, and deposit/withdraw cash) and administrators (who create stocks, set prices, and control market hours and holiday schedules).
 
-This repository serves as a showcase of end-to-end software engineering—from a responsive Next.js frontend to a Dockerized PostgreSQL/Node.js backend, all the way to a "zero-touch" AWS EC2 deployment automation.
+A core feature is a random stock price generator that simulates realistic OHLC (Open, High, Low, Close) price fluctuations every 10 seconds, broadcasting live updates to all connected clients in real time.
+
+---
+
+## 🎯 What Problem It Solves
+
+Stockbroker training traditionally requires expensive simulation software or access to live markets. This system provides a self-contained training environment where brokers can practice reading tickers, managing portfolios, and executing orders — without real financial risk. It mirrors real market behavior closely enough to build intuition, while giving administrators full control over the market's structure and schedule.
+
+---
+
+## 🧠 Why I Built It This Way
+
+This project was intentionally a learning stretch. Every major technology decision was chosen not just to ship a product, but to grow as an engineer.
+
+- **Unconventional Tech Stack — By Design**: The frontend is built with Next.js and TypeScript, neither of which I had used before. I chose them deliberately to challenge myself and measure how fast I could pick up a typed, component-driven framework under real project pressure. The backend, however, runs on Express.js — a framework I had prior experience with. This split let me take a calculated risk on the frontend without destabilizing the whole project.
+- **JWT over OAuth 2.0**: My previous experience was exclusively with OAuth 2.0, so I used this project as an opportunity to implement JWT (JSON Web Tokens) for authentication and authorization from scratch. The system uses HS256-signed tokens with role-based access control, enforced server-side via middleware — the server never trusts the client.
+- **WebSockets — First Time, Real Stakes**: I had never worked with WebSockets before this project. Rather than avoid the complexity, I used it as the right moment to learn. The real-time pipeline is split into three coordinated services: a Price Generator (writes OHLC data every 10 seconds), a Price Poller (queries the DB every 1–2 seconds for new records), and a WebSocket Service (broadcasts updates to all clients via Socket.io). This separation kept each piece independently testable and prevented a failure in one from cascading into the others.
+- **Bottom-Up, Academically Grounded Design**: Built solo, starting from the data model and working upward to the API layer and then the UI. The database schema was designed using principles from Intermediate Database Management coursework, and the requirements and system design process followed structured methodology from Systems Development (avoiding implementation bias). Every layer had a clear contract before the next was built.
+- **Atomic Transactions for Trade Integrity**: All buy/sell operations are wrapped in PostgreSQL `BEGIN / COMMIT / ROLLBACK` blocks. A failed mid-trade operation rolls back entirely — no partial cash deductions, no phantom portfolio updates.
+- **AWS for Production-Grade Infrastructure**: I wanted hands-on cloud experience beyond a local dev environment. This drove the deployment architecture onto AWS EC2 and forced me to grapple with real-world infrastructure problems (see *Lessons Learned* below).
 
 ---
 
 ## ✨ Core Features
 
-### 🔄 Real-Time Market Data
-- **Live Price Feeds:** Driven by `Socket.io`, market prices tick dynamically, pushing updates instantly to all connected clients without HTTP polling.
-- **Algorithmic Volatility:** A backend polling engine generates realistic price fluctuations based on individual stock volatility and market trends.
-- **Timezone-Aware Market Hours:** Enforces strict trading hours (e.g., 9:30 AM – 4:00 PM EST), correctly calculated regardless of the server's local timezone.
-
-### 💼 Portfolio & Wealth Management
-- **Instant Trade Execution:** Users can buy and sell active stocks with immediate portfolio reflection and strict cash-balance constraints.
-- **Transaction History:** Immutable ledger of every trade action logged to the PostgreSQL database.
-- **Idempotent Upserts:** Database architecture specifically designed to handle concurrent transaction races and prevent duplicate ledger entries.
-
-### 🔐 Role-Based Access & Admin Dashboard
-- **Standard Users:** Dedicated dashboard for market viewing, trading, and portfolio monitoring.
-- **Admin Control Panel:** Admins can inject new IPOs (stocks), halt trading, seed initial market conditions, and manage global system state.
-
-### 🚀 Zero-Touch AWS Deployment
-- **Custom Bash Automation:** Features a robust, idempotent `deploy.sh` pipeline that interacts directly with AWS CLI.
-- **Automated Provisioning:** The script dynamically provisions security groups, SSH keys, and an EC2 instance.
-- **Remote Payload Execution:** Zips the application, transports it via SSH, installs Docker natively on the fresh Ubuntu server, and spins up the multi-container architecture via `docker-compose`.
+- **Live Price Feeds:** Driven by `Socket.io`, pushing updates instantly to all connected clients without HTTP polling.
+- **Algorithmic Volatility:** A backend engine generates realistic price fluctuations based on individual stock volatility and market trends.
+- **Timezone-Aware Market Hours:** Enforces strict trading hours correctly calculated regardless of the server's local timezone.
+- **Idempotent Upserts & Ledger:** Immutable ledger of every trade action logged to PostgreSQL, designed to handle concurrent transaction races.
+- **Admin Control Panel:** Admins can inject new IPOs, halt trading, seed initial market conditions, and manage global system state.
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Frontend
-- **Framework:** [Next.js 16](https://nextjs.org/) (App Router) / React 19
-- **Styling:** Tailwind CSS 4, `clsx`, `tailwind-merge`
-- **Icons:** Lucide React
-- **Real-Time Integration:** `socket.io-client`
-
-### Backend
-- **Runtime:** [Node.js](https://nodejs.org/) with Express.js
-- **Real-Time Engine:** `Socket.io`
+- **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, `socket.io-client`
+- **Backend:** Node.js, Express.js, `socket.io`
 - **Database:** PostgreSQL 15 (Dockerized)
-- **Authentication:** JWT-based stateless authentication
-
-### Infrastructure & DevOps
-- **Containerization:** Docker & Docker Compose
-- **Reverse Proxy:** Nginx (Handles HTTP routing and WebSocket upgrading)
-- **Cloud Provider:** AWS EC2
-- **Automation:** Native Shell/Bash scripting
+- **Infrastructure:** Docker, Docker Compose, Nginx, AWS EC2, Native Bash Automation (`deploy.sh`)
 
 ---
 
 ## 📸 Application Gallery
 
-> **Note to self/developer:** Add high-quality screenshots here before publishing!
+> **Note:** Add high-quality screenshots here before publishing!
 > 
 > *Suggested Screenshots:*
 > 1. `![Market Dashboard](./docs/screenshots/market.png)` - Showing live ticker prices and charts.
@@ -62,95 +55,64 @@ This repository serves as a showcase of end-to-end software engineering—from a
 
 ---
 
+## 💡 Lessons Learned & What I'd Do Differently
+
+1. **Audit Cloud Costs Before Provisioning:** Initially, the project incurred unexpected AWS charges from NAT Gateways left running in a manual VPC configuration. AWS bills continuously regardless of traffic. Going forward, I will review every managed service's pricing model before deploying and set billing alerts from day one.
+2. **Plan Frontend State Management Earlier:** Simultaneously displaying live stock prices, portfolio values, and trade confirmations — all updating from WebSocket events — was more complex than anticipated. I'd define a clear global state management strategy (like Context or Redux) at the architecture stage rather than iterating on it mid-build.
+3. **Use Infrastructure-as-Code from the Start:** The initial VPC, subnets, and EC2 instances were configured manually. While it worked, it wasn't reproducible. This lesson actually drove me to create the automated `deploy.sh` pipeline you see in this repository today—proving that environments should always be shareable, auditable, and version-controlled.
+
+---
+
 ## 💻 Local Development Setup
 
 If you want to run this application locally on your machine, follow these steps:
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18+ recommended)
-- [Docker](https://www.docker.com/) & Docker Compose (for the database)
-- OR a local PostgreSQL installation (v14+)
+- Node.js (v18+)
+- Docker & Docker Compose
 
-### 1. Clone the Repository
+### 1. Clone & Setup Environment Variables
 ```bash
 git clone https://github.com/yourusername/stock-trading-system.git
 cd stock-trading-system
 ```
+Create `.env` in `backend` and `.env.local` in `frontend` (use `.env.example` as templates).
 
-### 2. Environment Variables
-You will need to create `.env` files in both the `backend` and `frontend` directories. You can use the provided `.env.example` as a template.
-
-**Backend (`backend/.env`):**
-```env
-PORT=5000
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=trade_sim
-JWT_SECRET=super_secret_jwt_key_for_local_dev
-```
-
-**Frontend (`frontend/.env.local`):**
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_WS_URL=http://localhost:5000
-```
-
-### 3. Start the Backend Infrastructure
+### 2. Start the Backend Infrastructure
 The easiest way to get the database running is via Docker:
 ```bash
-# This will spin up PostgreSQL, the Backend API, and Nginx locally
 docker-compose up -d
 ```
-*Alternatively, you can run the backend natively using `npm run dev` inside the `backend` folder after setting up a local Postgres instance.*
 
-### 4. Start the Frontend Application
+### 3. Start the Frontend Application
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-The application will be available at [http://localhost:3000](http://localhost:3000).
+The application will be available at `http://localhost:3000`.
 
 ---
 
-## ☁️ Deploying to AWS
+## ☁️ Zero-Touch AWS Deployment
 
-This repository contains a highly resilient `deploy.sh` script to launch the entire ecosystem into production. 
+Based on the lessons learned above, this repository now features a highly resilient, fully automated deployment script.
 
-### Prerequisites for Deployment
-- AWS CLI installed and authenticated with programmatic access.
-- An AWS account with permissions to manage EC2, Security Groups, and Key Pairs.
-
-### Launching Production
-Simply run the deploy script from the root of the project:
+Simply run the deploy script from the root of the project to launch into production on AWS:
 ```bash
 ./deploy.sh
 ```
 
 **What the script does:**
-1. Validates AWS credentials and state.
-2. Creates an open Security Group (`trade-sim-sg`) for ports 22 and 80.
-3. Provisions a new `t3.medium` EC2 instance with an expanded gp3 EBS volume.
-4. Archives the source code and securely copies it over SSH.
-5. Installs Docker/Docker Compose remotely.
-6. Builds and runs the entire architecture via `docker-compose up -d --build`.
+1. Validates AWS credentials and automatically creates an open Security Group.
+2. Provisions a new `t3.medium` EC2 instance.
+3. Archives the source code and securely copies it over SSH.
+4. Installs Docker natively on the remote Ubuntu server.
+5. Builds and runs the entire architecture via `docker-compose up -d --build`.
 
-**To seed the admin account:**
-Once deployed, you can securely inject the initial admin user into the production database:
-```bash
-./seed_admin.sh
-```
-
-**To tear down infrastructure:**
-```bash
-./destroy.sh
-```
+*(To tear down infrastructure, use `./destroy.sh`)*
 
 ---
 
 ## 📜 License
-
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

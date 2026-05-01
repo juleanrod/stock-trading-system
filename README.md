@@ -64,13 +64,13 @@ This project was intentionally a learning stretch. Every major technology decisi
 ![Market Dashboard](./docs/screenshots/market.png)
 *Live ticker prices and real-time market data.*
 
-![Trade Execution](./docs/screenshots/trade_modal.png)
-*Instant trade execution interface with real-time pricing.*
+![Portfolio Overview](./docs/screenshots/portfolio.png)
+*Real-time tracking of owned shares and profit/loss.*
 
-![Transaction History](./docs/screenshots/transactions.png)
+![Transaction History](./docs/screenshots/transaction_history.png)
 *Immutable ledger of all buy and sell orders.*
 
-![Cash Management](./docs/screenshots/cash.png)
+![Cash Management](./docs/screenshots/cash_management.png)
 *Deposit and withdraw interface for portfolio liquidity.*
 
 ![Admin Panel](./docs/screenshots/admin.png)

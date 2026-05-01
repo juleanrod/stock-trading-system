@@ -96,7 +96,7 @@ If you want to run this application locally on your machine, follow these steps:
 
 ### 1. Clone & Setup Environment Variables
 ```bash
-git clone https://github.com/yourusername/stock-trading-system.git
+git clone https://github.com/juleanrod/stock-trading-system.git
 cd stock-trading-system
 ```
 Create `.env` in `backend` and `.env.local` in `frontend` (use `.env.example` as templates).

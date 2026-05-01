@@ -33,6 +33,7 @@ This project was intentionally a learning stretch. Every major technology decisi
 - **Bottom-Up, Academically Grounded Design**: Built solo, starting from the data model and working upward to the API layer and then the UI. The database schema was designed using principles from Intermediate Database Management coursework, and the requirements and system design process followed structured methodology from Systems Development (avoiding implementation bias). Every layer had a clear contract before the next was built.
 - **Atomic Transactions for Trade Integrity**: All buy/sell operations are wrapped in PostgreSQL `BEGIN / COMMIT / ROLLBACK` blocks. A failed mid-trade operation rolls back entirely — no partial cash deductions, no phantom portfolio updates.
 - **AWS for Production-Grade Infrastructure**: I wanted hands-on cloud experience beyond a local dev environment. This drove the deployment architecture onto AWS EC2 and forced me to grapple with real-world infrastructure problems (see *Lessons Learned* below).
+- **Nginx as a Unified Ingress Layer**: Rather than exposing the Node.js or Next.js servers directly to the internet, I configured Nginx as a reverse proxy. This elegantly solved cross-origin (CORS) issues by serving both the frontend and API under a single port (80), while providing a highly reliable layer to manage the HTTP `Upgrade` headers required for stable WebSocket connections. It mirrors true production-grade DMZ patterns.
 
 ---
 

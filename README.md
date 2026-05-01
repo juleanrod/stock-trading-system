@@ -78,13 +78,29 @@ cd stock-trading-system
 ```
 Create `.env` in `backend` and `.env.local` in `frontend` (use `.env.example` as templates).
 
-### 2. Start the Backend Infrastructure
-The easiest way to get the database running is via Docker:
+### Option A: Run Everything with Docker (Zero Setup)
+The easiest way to spin up the entire stack locally is using Docker Compose. This runs the Database, Backend, Frontend, and Nginx proxy exactly as it does in production.
 ```bash
-docker-compose up -d
+docker-compose up -d --build
+```
+The application will be available at `http://localhost`.
+
+### Option B: Manual Local Development
+If you want to edit code and see hot-reloads, you should run the services locally.
+
+**1. Start the Database**
+```bash
+docker-compose up -d db
 ```
 
-### 3. Start the Frontend Application
+**2. Start the Backend API**
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+**3. Start the Frontend Application** (in a new terminal)
 ```bash
 cd frontend
 npm install
@@ -98,19 +114,33 @@ The application will be available at `http://localhost:3000`.
 
 Based on the lessons learned above, this repository now features a highly resilient, fully automated deployment script.
 
-Simply run the deploy script from the root of the project to launch into production on AWS:
+### Prerequisites for Deployment
+If you want to deploy this repository to your own AWS account, you will need:
+1. An active AWS Account.
+2. The AWS CLI installed on your machine (`brew install awscli` or via AWS docs).
+3. AWS Credentials configured. Run `aws configure` in your terminal and provide your `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and a default region (e.g., `us-east-1`).
+
+### Launching into Production
+Simply run the deploy script from the root of the project:
 ```bash
 ./deploy.sh
 ```
 
 **What the script does:**
-1. Validates AWS credentials and automatically creates an open Security Group.
-2. Provisions a new `t3.medium` EC2 instance.
-3. Archives the source code and securely copies it over SSH.
-4. Installs Docker natively on the remote Ubuntu server.
-5. Builds and runs the entire architecture via `docker-compose up -d --build`.
+1. Validates AWS credentials and automatically creates an open Security Group (`trade-sim-sg`).
+2. Generates an SSH Key Pair securely.
+3. Provisions a new `t3.medium` EC2 instance with an expanded gp3 EBS volume.
+4. Archives the source code and securely copies it over SSH.
+5. Installs Docker natively on the remote Ubuntu server.
+6. Builds and runs the entire architecture via `docker-compose up -d --build`.
 
-*(To tear down infrastructure, use `./destroy.sh`)*
+**Seeding the Admin Account:**
+Once deployed, securely inject the initial admin user into the production database:
+```bash
+./seed_admin.sh
+```
+
+*(To tear down infrastructure and stop billing, use `./destroy.sh`)*
 
 ---
 

@@ -4,6 +4,17 @@
 
 A core feature is a random stock price generator that simulates realistic OHLC (Open, High, Low, Close) price fluctuations every 10 seconds, broadcasting live updates to all connected clients in real time.
 
+## 📑 Table of Contents
+- [🎯 What Problem It Solves](#-what-problem-it-solves)
+- [🧠 Why I Built It This Way](#-why-i-built-it-this-way)
+- [✨ Core Features](#-core-features)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [📸 Application Gallery](#-application-gallery)
+- [💡 Lessons Learned & What I'd Do Differently](#-lessons-learned--what-id-do-differently)
+- [💻 Local Development Setup](#-local-development-setup)
+- [☁️ Zero-Touch AWS Deployment](#️-zero-touch-aws-deployment)
+- [📜 License](#-license)
+
 ---
 
 ## 🎯 What Problem It Solves
@@ -118,7 +129,7 @@ Based on the lessons learned above, this repository now features a highly resili
 If you want to deploy this repository to your own AWS account, you will need:
 1. An active AWS Account.
 2. The AWS CLI installed on your machine (`brew install awscli` or via AWS docs).
-3. AWS Credentials configured. Run `aws configure` in your terminal and provide your `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and a default region (e.g., `us-east-1`).
+3. AWS Credentials configured (with adminaccess to aws resources). Run `aws configure` in your terminal and provide your `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and a default region (e.g., `us-east-1`).
 
 ### Launching into Production
 Simply run the deploy script from the root of the project:

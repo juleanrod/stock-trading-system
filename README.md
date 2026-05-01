@@ -96,8 +96,8 @@ docker-compose up -d --build
 ```
 The application will be available at `http://localhost`.
 
-### Option B: Manual Local Development
-If you want to edit code and see hot-reloads, you should run the services locally.
+### Option B: Manual Local Development (Bypassing Nginx)
+If you want to edit code and see hot-reloads, you can run the services individually on their native ports. In this mode, we bypass Nginx entirely. Note that your `frontend/.env.local` must point directly to the backend's native port (`NEXT_PUBLIC_API_URL=http://localhost:5005/api`).
 
 **1. Start the Database**
 ```bash

@@ -59,7 +59,7 @@ This project was intentionally a learning stretch. Every major technology decisi
 
 1. **Audit Cloud Costs Before Provisioning:** Initially, the project incurred unexpected AWS charges from NAT Gateways left running in a manual VPC configuration. AWS bills continuously regardless of traffic. Going forward, I will review every managed service's pricing model before deploying and set billing alerts from day one.
 2. **Plan Frontend State Management Earlier:** Simultaneously displaying live stock prices, portfolio values, and trade confirmations — all updating from WebSocket events — was more complex than anticipated. I'd define a clear global state management strategy (like Context or Redux) at the architecture stage rather than iterating on it mid-build.
-3. **Use Infrastructure-as-Code from the Start:** The initial VPC, subnets, and EC2 instances were configured manually. While it worked, it wasn't reproducible. This lesson actually drove me to create the automated `deploy.sh` pipeline you see in this repository today—proving that environments should always be shareable, auditable, and version-controlled.
+3. **Use Infrastructure-as-Code from the Start:** The initial VPC, subnets, and EC2 instances were configured manually. While it worked, it wasn't reproducible. While I am well aware that industry-standard tools like Terraform or AWS CloudFormation exist for this exact purpose, I simply didn't have the time to learn them before the project deadline. So, leveraging what I already knew (Bash and the AWS CLI), I came up with my own highly sophisticated, "budget" IaC solution—which evolved into the automated `deploy.sh` pipeline you see in this repository today.
 
 ---
 

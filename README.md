@@ -58,12 +58,14 @@ This project was intentionally a learning stretch. Every major technology decisi
 
 ## 📸 Application Gallery
 
-> **Note:** Add high-quality screenshots here before publishing!
-> 
-> *Suggested Screenshots:*
-> 1. `![Market Dashboard](./docs/screenshots/market.png)` - Showing live ticker prices and charts.
-> 2. `![Trade Execution](./docs/screenshots/trade_modal.png)` - Showing the buy/sell interface.
-> 3. `![Admin Panel](./docs/screenshots/admin.png)` - Showing stock creation and system controls.
+![Market Dashboard](./docs/screenshots/market.png)
+*Live ticker prices and real-time market data.*
+
+![Trade Execution](./docs/screenshots/trade_modal.png)
+*Instant trade execution interface with real-time pricing.*
+
+![Admin Panel](./docs/screenshots/admin.png)
+*Admin controls for market hours, IPOs, and system state.*
 
 ---
 
